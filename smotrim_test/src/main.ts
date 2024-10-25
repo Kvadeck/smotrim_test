@@ -1,5 +1,5 @@
+import 'vue3-carousel/dist/carousel.css'
 import './assets/main.css'
-
 import { createApp } from 'vue'
 import App from './App.vue'
 

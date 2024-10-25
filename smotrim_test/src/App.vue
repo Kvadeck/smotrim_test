@@ -1,13 +1,19 @@
 <script setup lang="ts">
-
+import PCarousel from '@/components/ThePCarousel.vue'
 </script>
 
 <template>
-  <main>
-
+  <main class="wrapper">
+    <PCarousel />
   </main>
 </template>
 
 <style scoped>
-
+.wrapper {
+  margin: 0 auto;
+  padding: 0 60px;
+  display: flex;
+  height: 100vh;
+  align-items: center;
+}
 </style>
