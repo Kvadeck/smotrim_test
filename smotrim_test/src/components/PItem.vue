@@ -1,32 +1,28 @@
 <script setup lang="ts">
+import type { Person } from '@/types/personTypes'
+
 interface Props {
-  person: {
-    id: number
-    name: string
-    surname: string
-    title: string
-    picId: number
-  }
+  person: Person
 }
 
 const emit = defineEmits<{
   (e: 'setId', id: number): void
 }>()
 
-const props = defineProps<Props>()
+defineProps<Props>()
 </script>
 
 <template>
-  <div class="person-item">
+  <div>
     <img
-      @click="emit('setId', props.person.id)"
+      @click="emit('setId', person.id)"
       class="person-image"
-      :src="`https://api.smotrim.ru/api/v1/pictures/${props.person.picId}/bq/redirect`"
-      :alt="props.person.title"
+      :src="`https://api.smotrim.ru/api/v1/pictures/${person.picId}/bq/redirect`"
+      :alt="person.title"
     />
     <div class="person-info">
-      {{ props.person.name }}<br />
-      {{ props.person.surname }}
+      {{ person.name }}<br />
+      {{ person.surname }}
     </div>
   </div>
 </template>

@@ -6,6 +6,10 @@ export const PERSONS: { id: number } = {
   id: 2579,
 }
 
+export const PICTURE_SIZES: { md: string } = {
+  md: 'md',
+}
+
 export const CAROUSEL_BREAKPOINTS: {
   [key: number]: {
     itemsToShow?: number

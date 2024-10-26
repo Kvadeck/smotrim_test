@@ -5,17 +5,22 @@ import { onMounted, ref } from 'vue'
 import PItem from '@/components/PItem.vue'
 import { CAROUSEL_BREAKPOINTS } from '@/constants'
 import PModal from '@/components/PModal.vue'
+import type { Person } from '@/types/personTypes'
 
-const isError = ref(null)
-const persons = ref({ content: [] })
+const isError = ref('')
+const persons = ref<Person[]>([])
 const currentPersonId = ref<number | null>(null)
 const showModal = ref(false)
 
 const loadPersons = async () => {
   try {
     persons.value = await apiService.getPersons()
-  } catch (error) {
-    isError.value = error.message
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      isError.value = error.message
+    } else {
+      isError.value = String(error)
+    }
   }
 }
 
@@ -40,31 +45,42 @@ onMounted(() => {
     <h3>Error: {{ isError }}</h3>
   </div>
   <div v-else>
-    <div class="carousel-wrapper" >
+    <div class="carousel-wrapper">
       <Carousel
         :items-to-scroll="1"
         :items-to-show="8"
         :mouse-drag="false"
         :breakpoints="CAROUSEL_BREAKPOINTS"
       >
-        <Slide v-for="person in persons.content" :key="person.id">
+        <Slide v-for="person in persons" :key="person.id">
           <PItem @set-id="updateId" :person="person" />
         </Slide>
         <template #addons>
           <Navigation>
             <template #next>
-              <img class="next-arrow" src="@/assets/arrow.png" alt="arrow_next" />
+              <img
+                class="next-arrow"
+                src="@/assets/arrow.png"
+                alt="arrow_next"
+              />
             </template>
             <template #prev>
-              <img class="prev-arrow" src="@/assets/arrow.png" alt="arrow_prev" />
+              <img
+                class="prev-arrow"
+                src="@/assets/arrow.png"
+                alt="arrow_prev"
+              />
             </template>
           </Navigation>
         </template>
       </Carousel>
     </div>
-    <PModal v-if="showModal" @close="closeModal" :id="currentPersonId" />
+    <PModal
+      v-if="showModal"
+      @close="closeModal"
+      :current-person-id="currentPersonId"
+    />
   </div>
-
 </template>
 
 <style scoped>

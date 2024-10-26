@@ -13,7 +13,9 @@ import PCarousel from '@/components/ThePCarousel.vue'
   margin: 0 auto;
   padding: 0 60px;
   display: flex;
+  flex-direction: column;
+  width: 100%;
   height: 100vh;
-  align-items: center;
+  justify-content: center;
 }
 </style>

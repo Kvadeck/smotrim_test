@@ -1,23 +1,45 @@
 import cdnApiInstance from '@/utils/apiInstance'
-import { MAIN_THEMES_PERSONS, PERSONS } from '@/constants'
+import { MAIN_THEMES_PERSONS, PERSONS, PICTURE_SIZES } from '@/constants'
+import type { Person, PersonById } from '@/types/personTypes'
 import _ from 'lodash'
 
-const apiService = {
+type apiService = {
+  getPersons: () => Promise<Person[]>
+  getPersonById: <T extends number | null>(id: T) => Promise<PersonById>
+}
+
+const apiService: apiService = {
   async getPersons() {
     const rootData = await cdnApiInstance.get('/api/v1/boxes/vesti2')
-    const mainThemesPersonsData = _.find(
-      rootData.data.data.content,
-      function (item) {
-        return item.id === MAIN_THEMES_PERSONS.id
-      },
-    )
-    return _.find(mainThemesPersonsData.content, function (item) {
+    const mainThemesPersonsData = _.find(rootData.data.data.content, function <
+      T extends { id: number },
+    >(item: T) {
+      return item.id === MAIN_THEMES_PERSONS.id
+    })
+    const personsThemeData = _.find(mainThemesPersonsData.content, function <
+      T extends { id: number },
+    >(item: T) {
       return item.id === PERSONS.id
     })
+    return personsThemeData.content
   },
-  async getPersonById<T extends null | number>(id:T) {
+  async getPersonById(id) {
     const rootData = await cdnApiInstance.get(`/api/v1/persons/${id}`)
-    return rootData.data
+    const data = rootData.data.data
+
+    const mdPicture = _.find(data.pictures[0].sizes, function <
+      T extends { preset: string },
+    >(item: T) {
+      return item.preset === PICTURE_SIZES.md
+    })
+
+    return {
+      anons: data.anons,
+      body: data.body,
+      name: data.name,
+      surname: data.surname,
+      mdPictureLink: mdPicture.url,
+    }
   },
 }
 
